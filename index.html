@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Refugio · propuesta de landing v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Gochi+Hand&display=swap" rel="stylesheet">
+<style>
+:root{
+  --lima:#D9F23D; --lima-2:#EEF98A;
+  --bosque:#1B4A2C; --bosque-2:#2E6B3F;
+  --lila:#E7B8F3; --rosa:#F5A9DD; --magenta:#B83DD0;
+  --celeste:#A9DFF1; --naranja:#F25A2E; --durazno:#FBC7A9; --amarillo:#FFD83D;
+  --tinta:#16301F;
+  --bg:#FBFAF6; --ink:#16301F; --ink-soft:#44594B;
+  --card:#ffffff; --line:rgba(27,74,44,.14);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0E2116;--ink:#EEF6E2;--ink-soft:#B9CBB9;--card:#163322;--line:rgba(217,242,61,.18)}
+}
+:root[data-theme="dark"]{--bg:#0E2116;--ink:#EEF6E2;--ink-soft:#B9CBB9;--card:#163322;--line:rgba(217,242,61,.18)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(76px + env(safe-area-inset-top,0px));scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.locked{overflow:hidden}
+img,svg{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--magenta);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.display{font-family:"Archivo",Impact,"Arial Black",sans-serif;font-stretch:112%;font-weight:900;line-height:.98;letter-spacing:-.01em}
+.hand{font-family:"Gochi Hand","Comic Sans MS",cursive}
+.grain{position:relative}
+.grain::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;mix-blend-mode:multiply;border-radius:inherit;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.blob{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;color:var(--tinta);flex:none;border:2px solid var(--tinta)}
+.b-lima{background:var(--lima)}.b-rosa{background:var(--rosa)}.b-celeste{background:var(--celeste)}.b-lila{background:var(--lila)}.b-durazno{background:var(--durazno)}
+
+/* ================= INTRO ================= */
+#intro{position:fixed;inset:0;z-index:100;animation:lift .7s cubic-bezier(.7,0,.2,1) 2.5s forwards;background:var(--bosque);display:grid;place-items:center;overflow:hidden;cursor:pointer}
+#intro .flood{position:absolute;inset:0;background:var(--lima);clip-path:circle(0% at 50% 50%);animation:flood .7s cubic-bezier(.7,0,.2,1) .1s forwards}
+@keyframes flood{to{clip-path:circle(75% at 50% 50%)}}
+#intro .word{position:relative;display:flex;align-items:center;gap:10px;z-index:2}
+#intro .word svg.mark{width:clamp(54px,12vw,96px);height:auto;opacity:0;transform:rotate(-180deg) scale(.2);animation:markin .6s cubic-bezier(.3,1.6,.5,1) .55s forwards}
+@keyframes markin{to{opacity:1;transform:none}}
+#intro .letters{font-family:"Archivo",sans-serif;font-weight:900;font-stretch:100%;font-size:clamp(56px,15vw,140px);color:var(--bosque);line-height:1;display:flex}
+#intro .letters span{display:inline-block;opacity:0;transform:translateY(-60px) rotate(-12deg);animation:drop .5s cubic-bezier(.3,1.7,.5,1) forwards}
+@keyframes drop{to{opacity:1;transform:none}}
+#intro .stk{position:absolute;z-index:1;opacity:0;transform:scale(0) rotate(-40deg);animation:pop .55s cubic-bezier(.3,1.8,.5,1) forwards}
+@keyframes pop{to{opacity:1;transform:scale(1) rotate(var(--r,0deg))}}
+#intro .tag{position:absolute;bottom:18%;left:50%;transform:translateX(-50%);font-size:clamp(20px,4.5vw,30px);color:var(--bosque);opacity:0;animation:fade .4s ease 1.35s forwards;white-space:nowrap;z-index:2}
+@keyframes fade{to{opacity:1}}
+#intro.out{animation:lift .7s cubic-bezier(.7,0,.2,1) 0s forwards}
+@keyframes lift{to{transform:translateY(-105%);border-radius:0 0 50% 50%;visibility:hidden}}
+@media (prefers-reduced-motion:reduce){#intro{display:none}}
+
+/* ================= HEADER ================= */
+.top{position:sticky;top:0;z-index:30;padding:10px 0}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:7px;text-decoration:none;padding:7px 14px 7px 9px;border-radius:999px;background:#fff;border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta)}
+.brand svg{width:28px;height:28px}
+.brand b{font-family:"Archivo",sans-serif;font-stretch:100%;font-weight:800;font-size:21px;color:var(--bosque);letter-spacing:-.01em}
+.top-actions{display:flex;gap:8px;align-items:center}
+.top .join-top{display:none}
+.exit{border:2px solid var(--tinta);cursor:pointer;font:700 14px/1 "DM Sans",sans-serif;background:var(--bosque);color:#fff;padding:11px 14px;border-radius:999px;display:flex;gap:6px;align-items:center;box-shadow:3px 3px 0 var(--tinta);white-space:nowrap}
+.exit .ic{width:18px;height:18px}
+.exit:active,.brand:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
+
+/* ================= HERO ================= */
+.hero{position:relative;isolation:isolate;overflow:hidden;margin-top:-76px;padding:100px 0 56px}
+.hero-bg{position:absolute;inset:0;z-index:-1;background:
+  radial-gradient(60% 50% at 15% 20%,var(--lima) 0%,transparent 70%),
+  radial-gradient(55% 45% at 90% 15%,var(--rosa) 0%,transparent 70%),
+  radial-gradient(60% 50% at 70% 85%,var(--celeste) 0%,transparent 70%),
+  radial-gradient(50% 40% at 10% 90%,var(--lila) 0%,transparent 70%),
+  var(--lima-2)}
+.hero .wrap{display:grid;gap:10px}
+.hero h1{font-size:clamp(46px,12vw,92px);margin:0;color:var(--bosque)}
+.hero h1 .hl{background:var(--tinta);color:var(--lima);padding:0 .12em;border-radius:.12em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.hero .kicker{font-family:"Archivo",sans-serif;font-stretch:100%;font-weight:800;font-size:clamp(21px,4.2vw,30px);line-height:1.15;color:var(--tinta);margin:12px 0 10px;max-width:22ch}
+.hero .lead{font-size:clamp(16px,2vw,18px);max-width:44ch;margin:0 0 20px;color:#2a4434}
+.ctas{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font:700 16px/1.1 "DM Sans",sans-serif;padding:15px 22px;border-radius:999px;border:2px solid var(--tinta);cursor:pointer;box-shadow:3px 3px 0 var(--tinta)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
+.btn .ic{width:20px;height:20px}
+.btn-main{background:var(--bosque);color:var(--lima)}
+.btn-ghost{background:#fff;color:var(--bosque)}
+.btn-lima{background:var(--lima);color:var(--tinta)}
+
+.art{position:relative;height:360px;max-width:440px;width:100%;justify-self:center;touch-action:pan-y}
+.art .phone{position:absolute;inset:0;margin:auto;width:78%;height:auto;top:10px;animation:bob 4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(1deg)}}
+.stk{position:absolute;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;transform:rotate(var(--r,0deg));transition:filter .2s}
+.stk:active{cursor:grabbing;filter:drop-shadow(4px 6px 0 rgba(22,48,31,.35))}
+.stk svg{display:block;pointer-events:none}
+.stk.label{background:var(--magenta);color:var(--lima);padding:4px 14px 6px;border-radius:8px;font-size:22px;border:2px solid var(--tinta);white-space:nowrap}
+.drag-hint{position:absolute;right:0;bottom:-4px;font-size:18px;color:var(--bosque);display:flex;align-items:center;gap:4px}
+@media (prefers-reduced-motion:reduce){.art .phone{animation:none}html{scroll-behavior:auto}}
+
+/* ================= SECCIONES ================= */
+section{padding:60px 0}
+.h2{font-size:clamp(32px,7vw,54px);margin:0 0 10px}
+.sub{color:var(--ink-soft);max-width:50ch;margin:0 0 24px}
+.stepnum{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--tinta);color:var(--lima);font:800 15px "Archivo",sans-serif;flex:none}
+
+/* --- plan --- */
+.plan-wrap{display:grid;gap:22px}
+.q{display:flex;align-items:center;gap:10px;font-weight:700;margin:0 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:600 15px/1 "DM Sans",sans-serif;padding:12px 15px;border-radius:999px;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip[aria-pressed="true"]{background:var(--lima);border-color:var(--tinta);color:var(--tinta);box-shadow:2px 2px 0 var(--tinta)}
+.scene{border-radius:28px;border:2px solid var(--tinta);padding:18px;display:grid;gap:16px;align-items:center;color:var(--tinta);transition:background .4s}
+.scene .draw{width:100%;max-width:260px;justify-self:center}
+.scene h3{font-family:"Archivo",sans-serif;font-stretch:100%;font-weight:800;font-size:24px;margin:0 0 6px;line-height:1.1}
+.scene p{margin:0}
+.scene .note{display:inline-block;margin-top:10px;font-size:20px;background:#fff;border:2px solid var(--tinta);padding:2px 12px;border-radius:8px;transform:rotate(-2deg)}
+.draw.swap{animation:wob .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes wob{from{transform:scale(.85) rotate(-4deg);opacity:.4}to{transform:none;opacity:1}}
+
+.steps{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.steps li{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:14px;transition:border-color .2s,background .2s}
+.steps li.done{border-color:var(--bosque-2);background:color-mix(in srgb,var(--lima) 28%,var(--card))}
+.steps li.done .stepnum{background:var(--bosque-2)}
+.steps strong{display:block;line-height:1.25}
+.steps .txt{flex:1;min-width:0}
+.steps .txt span{display:block;font-size:15px;color:var(--ink-soft);margin:2px 0 8px}
+.steps .txt a{display:inline-flex;gap:6px;align-items:center;font-size:14px;font-weight:700;text-decoration:none;background:var(--tinta);color:#fff;padding:8px 12px;border-radius:999px}
+.steps .txt a .ic{width:16px;height:16px}
+.tick{flex:none;width:44px;height:44px;border-radius:14px;border:2px solid var(--ink);background:transparent;cursor:pointer;display:grid;place-items:center;color:var(--ink)}
+.tick .ic{opacity:.25}
+.tick[aria-pressed="true"]{background:var(--lima);border-color:var(--tinta);color:var(--tinta)}
+.tick[aria-pressed="true"] .ic{opacity:1}
+.progress{display:flex;align-items:center;gap:12px;font-weight:700;font-size:15px;margin-bottom:12px}
+.bar{flex:1;height:12px;border-radius:999px;background:var(--line);overflow:hidden;border:2px solid var(--tinta)}
+.bar i{display:block;height:100%;width:0;background:var(--lima);transition:width .4s cubic-bezier(.3,1.4,.5,1)}
+.finish{display:none;margin-top:12px;background:var(--bosque);color:#EAF4DC;border-radius:20px;padding:16px;gap:12px;align-items:center}
+.finish.show{display:flex}
+.finish a{color:var(--lima);font-weight:700}
+
+/* --- guías --- */
+.shelf{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,70%);gap:14px;overflow-x:auto;padding:6px 20px 18px;margin:0 -20px;scroll-snap-type:x mandatory}
+.zine{scroll-snap-align:start;aspect-ratio:3/4;border-radius:20px;border:2px solid var(--tinta);box-shadow:4px 4px 0 var(--tinta);padding:16px;display:flex;flex-direction:column;justify-content:space-between;text-decoration:none;color:var(--tinta);overflow:hidden;transition:transform .2s}
+.zine:hover{transform:rotate(-1.5deg) translateY(-4px)}
+.zine .top-row{display:flex;justify-content:space-between;align-items:flex-start}
+.zine .n{font-family:"Archivo",sans-serif;font-weight:900;font-stretch:125%;font-size:56px;line-height:.8}
+.zine .pic{width:64px;height:64px}
+.zine h3{font-family:"Archivo",sans-serif;font-stretch:100%;font-weight:800;font-size:19px;line-height:1.15;margin:0;padding:5px 8px;background:#fff;border-radius:6px;-webkit-box-decoration-break:clone;box-decoration-break:clone;display:inline}
+.zine .dl{align-self:flex-start;display:inline-flex;gap:6px;align-items:center;font-weight:700;font-size:14px;background:var(--tinta);color:#fff;padding:9px 14px;border-radius:999px;position:relative;z-index:1}
+.zine .dl .ic{width:16px;height:16px}
+.z1{background:linear-gradient(160deg,var(--naranja),#F78A5C 45%,var(--celeste))}
+.z2{background:linear-gradient(160deg,var(--magenta),var(--rosa) 60%,var(--lima))}
+.z3{background:linear-gradient(160deg,var(--celeste),#D6F0F7 50%,var(--lima))}
+.z4{background:linear-gradient(160deg,var(--lima),var(--lila))}
+
+/* --- únete --- */
+.join{background:linear-gradient(150deg,var(--lila),var(--rosa) 55%,var(--durazno));color:var(--tinta);border-radius:32px;border:2px solid var(--tinta);padding:30px 20px;overflow:hidden}
+.join .h2{color:var(--bosque)}
+.join .sub{color:#3a4d40}
+.join .env{width:150px;display:block;margin:0 0 6px -6px}
+.perks{display:grid;gap:10px;margin:0 0 22px;padding:0;list-style:none}
+.perks li{display:flex;gap:12px;align-items:center;background:rgba(255,255,255,.65);border-radius:18px;padding:10px 12px}
+.perks strong{display:block;line-height:1.2}
+.perks span{font-size:14px;color:#44594B}
+.signup{background:#fff;border-radius:22px;border:2px solid var(--tinta);padding:18px;box-shadow:4px 4px 0 var(--tinta)}
+.signup label{display:block;font-weight:700;font-size:15px;margin-bottom:8px}
+.field{display:flex;flex-wrap:wrap;gap:8px}
+.field input{flex:1 1 200px;min-width:0;font:500 16px "DM Sans",sans-serif;padding:14px 16px;border-radius:999px;border:2px solid var(--tinta);color:var(--tinta);background:#fff}
+.signup small{display:block;margin-top:10px;color:#5b6b5f;font-size:13px}
+.signup .ok{display:none;align-items:center;gap:10px;font-weight:600}
+.signup.done .ok{display:flex}.signup.done .form{display:none}
+
+/* --- comunidad --- */
+.feed{display:grid;gap:12px}
+.post{background:var(--card);border-radius:22px;padding:18px;border:2px solid var(--line)}
+.post .who{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-soft);margin-bottom:8px}
+.av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--tinta);border:2px solid var(--tinta)}
+.post h3{margin:0 0 6px;font-size:19px;line-height:1.2}
+.post h3 a{text-decoration:none}
+.post p{margin:0 0 12px;color:var(--ink-soft);font-size:15px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;font-weight:600}
+.meta span{display:inline-flex;gap:5px;align-items:center;color:var(--ink-soft)}
+.meta .ic{width:15px;height:15px}
+.metoo{display:inline-flex;gap:6px;align-items:center;font:700 13px "DM Sans",sans-serif;border:2px solid var(--ink);background:transparent;color:var(--ink);padding:7px 12px;border-radius:999px;cursor:pointer}
+.metoo[aria-pressed="true"]{background:var(--rosa);border-color:var(--tinta);color:var(--tinta)}
+.metoo .ic{width:16px;height:16px}
+.metoo.bump{animation:wob .4s}
+
+/* --- directorio --- */
+.care{background:var(--bosque);color:#F1F8E3;border-radius:32px;border:2px solid var(--tinta);padding:32px 20px;overflow:hidden;display:grid;gap:16px}
+.care .h2{color:var(--lima)}
+.care p{max-width:46ch;color:#D6E6CF;margin:0 0 18px}
+.care .kinds{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.care .kinds span{display:inline-flex;gap:6px;align-items:center;border:1.5px solid rgba(217,242,61,.55);padding:8px 12px;border-radius:999px;font-size:14px;font-weight:600}
+.care .kinds .ic{width:16px;height:16px;color:var(--lima)}
+.care .hug{width:200px;justify-self:center}
+
+/* --- donar --- */
+.give{display:grid;gap:16px}
+.give-card{background:var(--card);border:2px solid var(--tinta);box-shadow:4px 4px 0 var(--tinta);border-radius:28px;padding:20px}
+.give-card h3{margin:0 0 4px;font-size:20px}
+.give-card p{margin:0 0 14px;color:var(--ink-soft);font-size:15px}
+.seg{display:inline-flex;background:var(--lima-2);border:2px solid var(--tinta);border-radius:999px;padding:3px;margin-bottom:14px}
+.seg button{border:0;background:transparent;font:700 14px "DM Sans",sans-serif;padding:9px 14px;border-radius:999px;cursor:pointer;color:var(--tinta)}
+.seg button[aria-pressed="true"]{background:var(--bosque);color:var(--lima)}
+.amounts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.amt{font:800 17px "Archivo",sans-serif;padding:14px 4px;border-radius:16px;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.amt[aria-pressed="true"]{background:var(--lima);border-color:var(--tinta);color:var(--tinta);box-shadow:2px 2px 0 var(--tinta)}
+.jar{display:flex;gap:12px;align-items:center;background:var(--celeste);color:var(--tinta);border:2px solid var(--tinta);border-radius:18px;padding:10px 14px;font-size:14px;margin-bottom:14px;min-height:84px}
+.jar svg{width:56px;flex:none}
+.jar .fill{transition:height .5s cubic-bezier(.3,1.4,.5,1),y .5s cubic-bezier(.3,1.4,.5,1)}
+.give-card .btn{width:100%}
+.example{font-size:12px;color:var(--ink-soft);margin-top:8px;text-align:center}
+.other{display:grid;gap:10px}
+.other a{display:flex;gap:14px;align-items:center;text-decoration:none;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:12px 14px}
+.other strong{display:block;line-height:1.2}
+.other span{font-size:14px;color:var(--ink-soft)}
+
+footer{padding:40px 0 130px;font-size:15px;color:var(--ink-soft)}
+footer .row{display:flex;flex-wrap:wrap;gap:18px 32px;justify-content:space-between;align-items:flex-start}
+footer nav{display:flex;flex-wrap:wrap;gap:8px 18px}
+footer a{text-decoration:none;font-weight:600;color:var(--ink)}
+
+.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;gap:2px;padding:5px;border-radius:999px;background:#fff;border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta)}
+.dock a{display:flex;flex-direction:column;align-items:center;gap:1px;text-decoration:none;font-size:11px;font-weight:700;padding:7px 12px;border-radius:999px;color:var(--tinta);white-space:nowrap}
+.dock a.on{background:var(--bosque);color:var(--lima)}
+.dock a.cta{background:var(--lima)}
+.dock a.cta.on{background:var(--bosque)}
+.dock .ic{width:22px;height:22px}
+
+@media (min-width:860px){
+  .top .join-top{display:inline-flex;padding:11px 18px;font-size:15px}
+  .hero{padding:110px 0 80px}
+  .hero .wrap{grid-template-columns:1.15fr .85fr;align-items:center;gap:30px}
+  .art{height:440px}
+  .plan-wrap{grid-template-columns:1fr 1fr;align-items:start}
+  .scene{grid-template-columns:200px 1fr}
+  .shelf{grid-auto-flow:row;grid-template-columns:repeat(4,1fr);overflow:visible;margin:0;padding:6px 0}
+  .feed{grid-template-columns:repeat(3,1fr)}
+  .join{padding:52px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+  .care{padding:52px;grid-template-columns:1fr 240px;align-items:center}
+  .care .hug{width:240px}
+  .give{grid-template-columns:1.1fr .9fr;align-items:start}
+  .dock{display:none}
+  footer{padding-bottom:60px}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- marca Refugio: rayos de trazos -->
+    <symbol id="mark" viewBox="0 0 40 40">
+      <g fill="#2E6B3F">
+        <rect x="18" y="1" width="4" height="7" rx="1"/><rect x="18" y="10" width="4" height="4" rx="1"/>
+        <rect x="18" y="32" width="4" height="7" rx="1"/><rect x="18" y="26" width="4" height="4" rx="1"/>
+        <rect x="1" y="18" width="7" height="4" rx="1"/><rect x="10" y="18" width="4" height="4" rx="1"/>
+        <rect x="32" y="18" width="7" height="4" rx="1"/><rect x="26" y="18" width="4" height="4" rx="1"/>
+        <g transform="rotate(45 20 20)"><rect x="18" y="3" width="4" height="6" rx="1"/><rect x="18" y="31" width="4" height="6" rx="1"/><rect x="3" y="18" width="6" height="4" rx="1"/><rect x="31" y="18" width="6" height="4" rx="1"/></g>
+      </g>
+    </symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 7h6"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H10l-5 4v-4H4z"/><path d="M8 10h8M8 13h5"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-exit" viewBox="0 0 24 24"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h12l-2 4 2 4H5"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 8h14M5 8l-2 6h4zM19 8l-2 6h4z"/></symbol>
+    <symbol id="i-mind" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M8 20c0-2 1.8-3.5 4-3.5s4 1.5 4 3.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="m8.2 10.8 7.6-3.6M8.2 13.2l7.6 3.6"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M8 13V6a1.5 1.5 0 0 1 3 0v5M11 11V4.5a1.5 1.5 0 0 1 3 0V11M14 11V6a1.5 1.5 0 0 1 3 0v8a6 6 0 0 1-6 6h-1a5 5 0 0 1-4-2l-3-4a1.5 1.5 0 0 1 2.3-2L8 14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-drag" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></symbol>
+
+    <!-- stickers dibujados -->
+    <symbol id="s-bolt" viewBox="0 0 60 90"><path d="M36 3 8 50h18L16 87 54 34H34L44 3z" fill="#16301F" stroke="#16301F" stroke-width="4" stroke-linejoin="round"/></symbol>
+    <symbol id="s-heart" viewBox="0 0 80 72"><path d="M40 66S6 46 6 22A17 17 0 0 1 40 14a17 17 0 0 1 34 8c0 24-34 44-34 44z" fill="#F5A9DD" stroke="#16301F" stroke-width="4" stroke-linejoin="round"/><path d="M20 22c2-6 7-8 11-7" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="s-shield" viewBox="0 0 72 84"><path d="M36 4 8 14v22c0 20 12 34 28 44 16-10 28-24 28-44V14z" fill="#A9DFF1" stroke="#16301F" stroke-width="4" stroke-linejoin="round"/><path d="m22 42 10 10 18-20" fill="none" stroke="#16301F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="s-eye" viewBox="0 0 96 60"><path d="M4 30S22 6 48 6s44 24 44 24-18 24-44 24S4 30 4 30z" fill="#fff" stroke="#16301F" stroke-width="4"/><circle cx="48" cy="30" r="15" fill="#E7B8F3" stroke="#16301F" stroke-width="4"/><circle cx="48" cy="30" r="6" fill="#16301F"/><circle cx="52" cy="26" r="2.5" fill="#fff"/></symbol>
+    <symbol id="s-star" viewBox="0 0 60 60"><path d="M30 2c3 18 10 25 28 28-18 3-25 10-28 28-3-18-10-25-28-28C20 27 27 20 30 2z" fill="#FFD83D" stroke="#16301F" stroke-width="3.5" stroke-linejoin="round"/></symbol>
+    <symbol id="s-lock" viewBox="0 0 70 84"><path d="M18 38V24a17 17 0 0 1 34 0v14" fill="none" stroke="#16301F" stroke-width="7" stroke-linecap="round"/><rect x="6" y="36" width="58" height="44" rx="10" fill="#FBC7A9" stroke="#16301F" stroke-width="4"/><circle cx="35" cy="56" r="6" fill="#16301F"/><path d="M35 58v10" stroke="#16301F" stroke-width="5" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- ================= INTRO ================= -->
+<div id="intro" aria-hidden="true" title="Toca para entrar">
+  <div class="flood grain"></div>
+  <svg class="stk" style="--r:-14deg;width:clamp(50px,10vw,80px);left:12%;top:16%;animation-delay:.45s"><use href="#s-bolt"/></svg>
+  <svg class="stk" style="--r:12deg;width:clamp(64px,12vw,100px);right:10%;top:20%;animation-delay:.6s"><use href="#s-heart"/></svg>
+  <svg class="stk" style="--r:-8deg;width:clamp(56px,11vw,86px);left:14%;bottom:22%;animation-delay:.75s"><use href="#s-shield"/></svg>
+  <svg class="stk" style="--r:6deg;width:clamp(80px,14vw,120px);right:12%;bottom:26%;animation-delay:.9s"><use href="#s-eye"/></svg>
+  <svg class="stk" style="--r:0deg;width:40px;left:46%;top:12%;animation-delay:1s"><use href="#s-star"/></svg>
+  <svg class="stk" style="--r:0deg;width:30px;right:30%;bottom:14%;animation-delay:1.1s"><use href="#s-star"/></svg>
+  <div class="word">
+    <svg class="mark"><use href="#mark"/></svg>
+    <div class="letters" id="letters"><span style="animation-delay:0.70s">R</span><span style="animation-delay:0.77s">e</span><span style="animation-delay:0.84s">f</span><span style="animation-delay:0.91s">u</span><span style="animation-delay:0.98s">g</span><span style="animation-delay:1.05s">i</span><span style="animation-delay:1.12s">o</span></div>
+  </div>
+  <div class="tag hand">un lugar seguro en internet</div>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label="Refugio, inicio"><svg><use href="#mark"/></svg><b>Refugio</b></a>
+    <div class="top-actions">
+      <a class="btn btn-main join-top" href="#unete">Únete</a>
+      <button class="exit" id="exit" title="Sale de esta página de inmediato. También con la tecla Esc"><svg class="ic"><use href="#i-exit"/></svg>Salida rápida</button>
+    </div>
+  </div>
+</header>
+
+<main id="inicio">
+  <!-- ================= HERO ================= -->
+  <section class="hero grain">
+    <div class="hero-bg"></div>
+    <div class="wrap">
+      <div>
+        <h1 class="display">¿Te atacan en <span class="hl">internet?</span></h1>
+        <p class="kicker">Aquí sabes qué hacer y con quién hablar.</p>
+        <p class="lead">Refugio es una plataforma gratuita de Resisters con guías, comunidad y contactos de apoyo para mujeres y personas LGBTIQ+ en Guatemala.</p>
+        <div class="ctas">
+          <a class="btn btn-main" href="#plan">Armar mi plan</a>
+          <a class="btn btn-ghost" href="#unete">Quiero sumarme</a>
+        </div>
+      </div>
+
+      <div class="art" id="art">
+        <svg class="phone" viewBox="0 0 300 380" aria-hidden="true">
+          <!-- mano -->
+          <path d="M70 300c-14 30 10 70 70 74 50 4 92-18 104-56l10-46c4-16-12-22-20-10l-10 18" fill="#FBC7A9" stroke="#16301F" stroke-width="4" stroke-linejoin="round"/>
+          <!-- teléfono -->
+          <g transform="rotate(-7 150 180)">
+            <rect x="78" y="20" width="148" height="290" rx="26" fill="#F5A9DD" stroke="#16301F" stroke-width="4"/>
+            <rect x="90" y="36" width="124" height="258" rx="16" fill="#fff" stroke="#16301F" stroke-width="3"/>
+            <rect x="132" y="44" width="40" height="10" rx="5" fill="#16301F"/>
+            <use href="#mark" x="132" y="72" width="40" height="40"/>
+            <text x="152" y="134" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="800" font-size="20" fill="#1B4A2C">Refugio</text>
+            <rect x="102" y="150" width="100" height="30" rx="10" fill="#D9F23D" stroke="#16301F" stroke-width="2.5"/>
+            <text x="152" y="170" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="700" font-size="11" fill="#16301F">Armar mi plan</text>
+            <rect x="102" y="190" width="100" height="22" rx="8" fill="#A9DFF1"/>
+            <rect x="102" y="218" width="76" height="22" rx="8" fill="#E7B8F3"/>
+            <rect x="102" y="246" width="88" height="22" rx="8" fill="#EEF98A"/>
+          </g>
+          <!-- dedos sobre el borde -->
+          <path d="M226 210c18-4 26 4 24 14s-14 12-26 10" fill="#FBC7A9" stroke="#16301F" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M228 240c18-4 26 4 24 14s-14 12-26 10" fill="#FBC7A9" stroke="#16301F" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M226 270c16-3 22 4 20 13s-12 10-24 8" fill="#FBC7A9" stroke="#16301F" stroke-width="4" stroke-linejoin="round"/>
+          <!-- pulgar -->
+          <path d="M84 250c-20 6-26 26-14 40 10 12 28 6 34-6" fill="#FBC7A9" stroke="#16301F" stroke-width="4" stroke-linejoin="round"/>
+        </svg>
+        <div class="stk" style="--r:-12deg;left:2%;top:4%;width:62px"><svg viewBox="0 0 60 90"><use href="#s-bolt"/></svg></div>
+        <div class="stk" style="--r:10deg;right:0;top:10%;width:84px"><svg viewBox="0 0 80 72"><use href="#s-heart"/></svg></div>
+        <div class="stk" style="--r:-6deg;left:0;bottom:22%;width:70px"><svg viewBox="0 0 72 84"><use href="#s-shield"/></svg></div>
+        <div class="stk" style="--r:8deg;right:2%;bottom:30%;width:92px"><svg viewBox="0 0 96 60"><use href="#s-eye"/></svg></div>
+        <div class="stk" style="left:30%;top:0;width:34px"><svg viewBox="0 0 60 60"><use href="#s-star"/></svg></div>
+        <div class="stk label hand" style="--r:-5deg;left:4%;bottom:4%">no estás sola</div>
+        <div class="drag-hint hand"><svg class="ic" style="width:18px;height:18px"><use href="#i-drag"/></svg>muévelos</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PLAN ================= -->
+  <section id="plan">
+    <div class="wrap">
+      <h2 class="h2 display">Arma tu plan en 3 pasos</h2>
+      <p class="sub">Elige lo que te está pasando. Te mostramos qué es y qué hacer, en orden. Marca cada paso cuando lo completes.</p>
+
+      <div class="plan-wrap">
+        <div>
+          <p class="q"><span class="stepnum">?</span>¿Qué te está pasando?</p>
+          <div class="chips" role="group" aria-label="Situaciones" id="chips"></div>
+          <div style="height:16px"></div>
+          <div class="scene grain" id="scene">
+            <svg class="draw" id="draw" viewBox="0 0 220 220" aria-hidden="true"></svg>
+            <div><h3 id="sTitle"></h3><p id="sDesc"></p><span class="note hand" id="sNote"></span></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="progress"><span id="pTxt">0 de 3 listos</span><div class="bar"><i id="pBar"></i></div></div>
+          <ol class="steps" id="steps"></ol>
+          <div class="finish" id="finish">
+            <svg width="44" viewBox="0 0 72 84"><use href="#s-shield"/></svg>
+            <span>Completaste tu plan. Si quieres que alguien te acompañe, revisa el <a href="#directorio">directorio</a>.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GUÍAS ================= -->
+  <section id="guias">
+    <div class="wrap">
+      <h2 class="h2 display">Guías gratuitas</h2>
+      <p class="sub">Cuatro guías cortas en PDF. Están en orden, pero puedes ir directo a la que necesites.</p>
+      <div class="shelf">
+        <a class="zine z1 grain" href="https://refugio.somosresisters.com/wp-content/uploads/2026/07/GUIA-01_REFUGIO_RESISTERS.pdf"><div class="top-row"><span class="n">1</span><svg class="pic" viewBox="0 0 96 60"><use href="#s-eye"/></svg></div><div><h3>Qué son las violencias de género facilitadas por tecnología</h3></div><span class="dl"><svg class="ic"><use href="#i-down"/></svg>Descargar</span></a>
+        <a class="zine z2 grain" href="https://refugio.somosresisters.com/wp-content/uploads/2026/07/GUIA-02_REFUGIO_RESISTERS.pdf"><div class="top-row"><span class="n">2</span><svg class="pic" viewBox="0 0 70 84"><use href="#s-lock"/></svg></div><div><h3>Cómo guardar evidencia sin ponerte en más riesgo</h3></div><span class="dl"><svg class="ic"><use href="#i-down"/></svg>Descargar</span></a>
+        <a class="zine z3 grain" href="https://refugio.somosresisters.com/wp-content/uploads/2026/07/GUIA-03_REFUGIO_RESISTERS.pdf"><div class="top-row"><span class="n">3</span><svg class="pic" viewBox="0 0 60 90"><use href="#s-bolt"/></svg></div><div><h3>Cómo reportar en redes sociales y apps de mensajería</h3></div><span class="dl"><svg class="ic"><use href="#i-down"/></svg>Descargar</span></a>
+        <a class="zine z4 grain" href="https://refugio.somosresisters.com/wp-content/uploads/2026/07/GUIA-04_REFUGIO_RESISTERS.pdf"><div class="top-row"><span class="n">4</span><svg class="pic" viewBox="0 0 72 84"><use href="#s-shield"/></svg></div><div><h3>Cómo denunciar ante autoridades en Guatemala</h3></div><span class="dl"><svg class="ic"><use href="#i-down"/></svg>Descargar</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ÚNETE ================= -->
+  <section id="unete">
+    <div class="wrap">
+      <div class="join grain">
+        <div>
+          <svg class="env" viewBox="0 0 160 110" aria-hidden="true">
+            <rect x="10" y="22" width="130" height="80" rx="10" fill="#fff" stroke="#16301F" stroke-width="4"/>
+            <path d="m12 28 63 44 63-44" fill="none" stroke="#16301F" stroke-width="4" stroke-linejoin="round"/>
+            <g transform="translate(118 4) rotate(12)"><path d="M18 36S2 26 2 14A8 8 0 0 1 18 10a8 8 0 0 1 16 4c0 12-16 22-16 22z" fill="#F5A9DD" stroke="#16301F" stroke-width="3.5"/></g>
+            <use href="#s-star" x="0" y="0" width="24" height="24"/>
+          </svg>
+          <h2 class="h2 display">Únete a Refugio</h2>
+          <p class="sub">Es gratis y puedes darte de baja cuando quieras. Al suscribirte:</p>
+          <ul class="perks">
+            <li><span class="blob b-lima"><svg class="ic"><use href="#i-book"/></svg></span><div><strong>Recibes cada guía nueva en tu correo</strong><span>Sin tener que buscarla</span></div></li>
+            <li><span class="blob b-celeste"><svg class="ic"><use href="#i-cal"/></svg></span><div><strong>Te invitamos a talleres y encuentros</strong><span>Presenciales y virtuales</span></div></li>
+            <li><span class="blob b-durazno"><svg class="ic"><use href="#i-chat"/></svg></span><div><strong>Puedes escribir en la comunidad</strong><span>Con seudónimo, sin foto ni nombre real</span></div></li>
+          </ul>
+        </div>
+        <div class="signup" id="signup">
+          <div class="form">
+            <label for="email">Tu correo</label>
+            <div class="field">
+              <input id="email" type="email" placeholder="nombre@correo.com" autocomplete="email">
+              <button class="btn btn-main" id="subBtn" type="button">Suscribirme</button>
+            </div>
+            <small><svg class="ic" style="width:14px;height:14px;vertical-align:-2px"><use href="#i-lock"/></svg> Solo usamos tu correo para enviarte novedades de Refugio. Nunca lo compartimos.</small>
+          </div>
+          <div class="ok" role="status"><span class="blob b-lima"><svg class="ic"><use href="#i-check"/></svg></span><span id="okText">Te suscribiste.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COMUNIDAD ================= -->
+  <section id="comunidad">
+    <div class="wrap">
+      <h2 class="h2 display">Comunidad</h2>
+      <p class="sub">Preguntas y experiencias de otras personas. Puedes leer sin cuenta. Si te pasó algo parecido, dilo con un toque.</p>
+      <div class="feed">
+        <article class="post">
+          <div class="who"><span class="av" style="background:var(--lima)">H</span>HeidyHernandez</div>
+          <h3><a href="https://refugio.somosresisters.com/community/lo-tecnico-cotidiano/que-es-el-blindaje-digital/">¿Qué es el blindaje digital?</a></h3>
+          <p>Cuando pienso en "blindaje" imagino algo imposible de penetrar. ¿Se puede lograr eso?</p>
+          <div class="meta"><button class="metoo" data-n="4" aria-pressed="false"><svg class="ic"><use href="#i-heart"/></svg><span>Yo también me lo pregunto · 4</span></button><span><svg class="ic"><use href="#i-chat"/></svg>3</span></div>
+        </article>
+        <article class="post">
+          <div class="who"><span class="av" style="background:var(--celeste)">H</span>HeidyHernandez</div>
+          <h3><a href="https://refugio.somosresisters.com/community/protocolos-que-sostienen-protocolos-que-sostienen/doble-verificacion/">Doble verificación</a></h3>
+          <p>Siempre voy con prisa y me cuesta confirmar todo desde el teléfono. ¿Vale la pena?</p>
+          <div class="meta"><button class="metoo" data-n="2" aria-pressed="false"><svg class="ic"><use href="#i-heart"/></svg><span>A mí también me pasa · 2</span></button><span><svg class="ic"><use href="#i-chat"/></svg>2</span></div>
+        </article>
+        <article class="post">
+          <div class="who"><span class="av" style="background:var(--rosa)">L</span>Lobita Miel</div>
+          <h3><a href="https://refugio.somosresisters.com/community/reglas-de-la-comunidad/me-doxxearon/">Me doxxearon</a></h3>
+          <p>Después de una manifestación publicaron mis datos personales y afectó mi trabajo.</p>
+          <div class="meta"><button class="metoo" data-n="1" aria-pressed="false"><svg class="ic"><use href="#i-heart"/></svg><span>Te acompaño · 1</span></button><span><svg class="ic"><use href="#i-chat"/></svg>Sin respuestas aún</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DIRECTORIO ================= -->
+  <section id="directorio">
+    <div class="wrap">
+      <div class="care grain">
+        <div>
+          <h2 class="h2 display">Habla con alguien que pueda ayudarte</h2>
+          <p>El directorio reúne organizaciones en Guatemala que acompañan casos de violencia digital.</p>
+          <div class="kinds">
+            <span><svg class="ic"><use href="#i-scale"/></svg>Legal</span>
+            <span><svg class="ic"><use href="#i-mind"/></svg>Psicológico</span>
+            <span><svg class="ic"><use href="#i-shield"/></svg>Seguridad digital</span>
+          </div>
+          <a class="btn btn-lima" href="https://refugio.somosresisters.com/directorio/">Ver directorio <svg class="ic"><use href="#i-arrow"/></svg></a>
+        </div>
+        <svg class="hug" viewBox="0 0 240 200" aria-hidden="true">
+          <circle cx="120" cy="104" r="88" fill="#D9F23D" stroke="#16301F" stroke-width="4"/>
+          <circle cx="92" cy="78" r="22" fill="#FBC7A9" stroke="#16301F" stroke-width="4"/>
+          <circle cx="150" cy="84" r="22" fill="#E7B8F3" stroke="#16301F" stroke-width="4"/>
+          <path d="M52 186c4-40 22-70 44-70s34 18 38 30" fill="#F5A9DD" stroke="#16301F" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M112 186c2-34 16-62 38-62s36 26 40 62" fill="#A9DFF1" stroke="#16301F" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M96 140c20 6 44 4 66-4" fill="none" stroke="#16301F" stroke-width="4" stroke-linecap="round"/>
+          <use href="#s-star" x="186" y="14" width="34" height="34"/>
+          <use href="#s-heart" x="16" y="20" width="44" height="40"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= APOYA ================= -->
+  <section id="apoya">
+    <div class="wrap">
+      <h2 class="h2 display">Apoya a Refugio</h2>
+      <p class="sub">Refugio es gratuito para quien lo necesita. Tu aporte permite crear más guías, mantener la plataforma y acompañar más casos.</p>
+      <div class="give">
+        <div class="give-card">
+          <h3>Haz una donación</h3>
+          <p>Elige cuánto y cada cuánto.</p>
+          <div class="seg" role="group" aria-label="Frecuencia">
+            <button data-f="una" aria-pressed="true">Una vez</button>
+            <button data-f="mes" aria-pressed="false">Cada mes</button>
+          </div>
+          <div class="amounts" role="group" aria-label="Monto">
+            <button class="amt" data-a="50" aria-pressed="false">Q50</button>
+            <button class="amt" data-a="100" aria-pressed="true">Q100</button>
+            <button class="amt" data-a="250" aria-pressed="false">Q250</button>
+            <button class="amt" data-a="otro" aria-pressed="false">Otro</button>
+          </div>
+          <div class="jar">
+            <svg viewBox="0 0 60 80" aria-hidden="true">
+              <defs><clipPath id="jarclip"><path d="M10 22h40v46a8 8 0 0 1-8 8H18a8 8 0 0 1-8-8z"/></clipPath></defs>
+              <rect class="fill" id="jarFill" x="10" y="50" width="40" height="30" fill="#D9F23D" clip-path="url(#jarclip)"/>
+              <path d="M10 22h40v46a8 8 0 0 1-8 8H18a8 8 0 0 1-8-8z" fill="none" stroke="#16301F" stroke-width="3.5"/>
+              <rect x="6" y="12" width="48" height="10" rx="4" fill="#F5A9DD" stroke="#16301F" stroke-width="3.5"/>
+              <path d="M30 40c-6-6-12 0-6 6l6 6 6-6c6-6 0-12-6-6z" fill="#F5A9DD" stroke="#16301F" stroke-width="2.5"/>
+            </svg>
+            <span id="impact"></span>
+          </div>
+          <a class="btn btn-main" id="giveBtn" href="#apoya"></a>
+          <div class="example">Montos y textos de impacto de ejemplo</div>
+        </div>
+        <div class="other">
+          <a href="https://www.instagram.com/somosresisters"><span class="blob b-rosa"><svg class="ic"><use href="#i-share"/></svg></span><div><strong>Comparte Refugio</strong><span>Puede llegarle a alguien que lo necesita</span></div></a>
+          <a href="mailto:somosresisters@gmail.com?subject=Quiero%20ser%20voluntaria"><span class="blob b-lima"><svg class="ic"><use href="#i-hand"/></svg></span><div><strong>Sé voluntaria</strong><span>Diseño, contenido, moderación o acompañamiento</span></div></a>
+          <a href="mailto:somosresisters@gmail.com?subject=Alianza%20con%20Refugio"><span class="blob b-lila"><svg class="ic"><use href="#i-flag"/></svg></span><div><strong>Haz una alianza</strong><span>Para organizaciones y fundaciones</span></div></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap row">
+    <div>
+      <a class="brand" href="#inicio" style="display:inline-flex;margin-bottom:12px"><svg><use href="#mark"/></svg><b>Refugio</b></a>
+      <div>Un proyecto de Resisters, con el apoyo de FCAM.<br><a href="mailto:somosresisters@gmail.com">somosresisters@gmail.com</a></div>
+    </div>
+    <nav aria-label="Redes">
+      <a href="https://www.instagram.com/somosresisters">Instagram</a>
+      <a href="https://www.tiktok.com/@somosresisters">TikTok</a>
+      <a href="https://www.youtube.com/@somosresisters">YouTube</a>
+      <a href="https://www.facebook.com/somosresisters/">Facebook</a>
+    </nav>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Navegación principal">
+  <a href="#plan" data-s="plan"><svg class="ic"><use href="#i-flag"/></svg>Mi plan</a>
+  <a href="#guias" data-s="guias"><svg class="ic"><use href="#i-book"/></svg>Guías</a>
+  <a href="#comunidad" data-s="comunidad"><svg class="ic"><use href="#i-chat"/></svg>Comunidad</a>
+  <a href="#unete" data-s="unete" class="cta"><svg class="ic"><use href="#i-mail"/></svg>Únete</a>
+</nav>
+
+<script>
+/* ---------- INTRO ---------- */
+(function(){
+  const intro=document.getElementById('intro');
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let seen=false; try{seen=sessionStorage.getItem('refugio-intro')==='1'}catch(e){}
+  const done=()=>{document.body.classList.remove('locked');intro.remove()};
+  if(reduce||seen){done();return}
+  document.body.classList.add('locked');
+  const leave=()=>{if(intro.classList.contains('out'))return;intro.classList.add('out');try{sessionStorage.setItem('refugio-intro','1')}catch(e){}setTimeout(done,700)};
+  intro.addEventListener('click',leave);
+  setTimeout(leave,2500);
+})();
+
+/* ---------- STICKERS ARRASTRABLES ---------- */
+document.querySelectorAll('.art .stk').forEach(el=>{
+  let sx,sy,ox=0,oy=0,dx=0,dy=0;
+  el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);sx=e.clientX;sy=e.clientY;el.style.zIndex=5});
+  el.addEventListener('pointermove',e=>{if(!el.hasPointerCapture(e.pointerId))return;dx=ox+e.clientX-sx;dy=oy+e.clientY-sy;el.style.transform=`translate(${dx}px,${dy}px) rotate(var(--r,0deg)) scale(1.08)`});
+  const up=e=>{if(!el.hasPointerCapture(e.pointerId))return;ox=dx;oy=dy;el.style.transform=`translate(${dx}px,${dy}px) rotate(var(--r,0deg))`};
+  el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+});
+
+/* ---------- PLAN ---------- */
+const G=n=>`https://refugio.somosresisters.com/wp-content/uploads/2026/07/GUIA-0${n}_REFUGIO_RESISTERS.pdf`;
+const DIR='#directorio';
+const ink='#16301F';
+const art={
+acoso:`<rect x="20" y="10" width="180" height="200" rx="24" fill="#fff" stroke="${ink}" stroke-width="4"/>
+ <g stroke="${ink}" stroke-width="3"><rect x="36" y="32" width="120" height="30" rx="12" fill="#F5A9DD"/><rect x="60" y="72" width="124" height="30" rx="12" fill="#FFD83D"/><rect x="36" y="112" width="110" height="30" rx="12" fill="#F5A9DD"/><rect x="56" y="152" width="128" height="30" rx="12" fill="#FFD83D"/></g>
+ <g font-family="Archivo,sans-serif" font-weight="900" font-size="16" fill="${ink}"><text x="50" y="53">@#$%!!</text><text x="76" y="93">¿por qué no…</text><text x="50" y="133">!!!!!!</text><text x="72" y="173">te estoy viendo</text></g>
+ <circle cx="186" cy="22" r="20" fill="#F25A2E" stroke="${ink}" stroke-width="3"/><text x="186" y="28" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="900" font-size="15" fill="#fff">99+</text>`,
+doxxeo:`<rect x="14" y="70" width="150" height="100" rx="14" fill="#fff" stroke="${ink}" stroke-width="4"/>
+ <circle cx="50" cy="112" r="20" fill="#E7B8F3" stroke="${ink}" stroke-width="3"/><g stroke="${ink}" stroke-width="5" stroke-linecap="round"><path d="M82 100h62M82 118h50M82 136h58"/></g>
+ <rect x="24" y="148" width="130" height="12" rx="6" fill="#F25A2E"/>
+ <path d="M168 20c-20 0-34 15-34 33 0 26 34 58 34 58s34-32 34-58c0-18-14-33-34-33z" fill="#F25A2E" stroke="${ink}" stroke-width="4"/><circle cx="168" cy="54" r="12" fill="#fff" stroke="${ink}" stroke-width="3"/>
+ <path d="M150 186h56M178 170v32" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>`,
+suplantacion:`<g stroke="${ink}" stroke-width="4"><rect x="12" y="40" width="94" height="130" rx="16" fill="#fff"/><rect x="114" y="40" width="94" height="130" rx="16" fill="#fff"/></g>
+ <circle cx="59" cy="84" r="22" fill="#A9DFF1" stroke="${ink}" stroke-width="3"/><circle cx="161" cy="84" r="22" fill="#A9DFF1" stroke="${ink}" stroke-width="3"/>
+ <g stroke="${ink}" stroke-width="4" stroke-linecap="round"><path d="M36 124h46M42 142h34M138 124h46M144 142h34"/></g>
+ <text x="59" y="196" text-anchor="middle" font-family="Gochi Hand,cursive" font-size="20" fill="${ink}">yo</text>
+ <circle cx="196" cy="44" r="20" fill="#F25A2E" stroke="${ink}" stroke-width="3"/><path d="m188 36 16 16M204 36l-16 16" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+ <text x="161" y="196" text-anchor="middle" font-family="Gochi Hand,cursive" font-size="20" fill="${ink}">¿yo?</text>`,
+intimo:`<rect x="30" y="20" width="160" height="130" rx="14" fill="#fff" stroke="${ink}" stroke-width="4"/>
+ <path d="M44 132 88 80l30 32 18-18 40 38z" fill="#E7B8F3" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/><circle cx="150" cy="54" r="12" fill="#FFD83D" stroke="${ink}" stroke-width="3"/>
+ <g transform="translate(76 112)"><path d="M14 30V18a20 20 0 0 1 40 0v12" fill="none" stroke="${ink}" stroke-width="7" stroke-linecap="round"/><rect x="2" y="28" width="64" height="56" rx="12" fill="#D9F23D" stroke="${ink}" stroke-width="4"/><circle cx="34" cy="52" r="7" fill="${ink}"/><path d="M34 54v14" stroke="${ink}" stroke-width="5" stroke-linecap="round"/></g>`,
+deepfake:`<g stroke-width="4" fill="none" stroke-linejoin="round">
+ <path d="M70 196c0-30 18-46 40-46s40 16 40 46" stroke="#B83DD0" transform="translate(-8 0)"/>
+ <circle cx="102" cy="96" r="50" stroke="#A9DFF1" stroke-width="6"/>
+ <circle cx="118" cy="96" r="50" stroke="#F5A9DD" stroke-width="6"/></g>
+ <circle cx="110" cy="96" r="50" fill="#fff" stroke="${ink}" stroke-width="4"/>
+ <path d="M70 196c0-30 18-46 40-46s40 16 40 46" fill="#FBC7A9" stroke="${ink}" stroke-width="4"/>
+ <g fill="${ink}"><circle cx="92" cy="90" r="6"/><circle cx="128" cy="90" r="6"/></g><path d="M94 118c10 8 22 8 32 0" stroke="${ink}" stroke-width="4" fill="none" stroke-linecap="round"/>
+ <g fill="#D9F23D" stroke="${ink}" stroke-width="2.5"><rect x="56" y="58" width="44" height="12"/><rect x="120" y="120" width="40" height="10"/><rect x="66" y="132" width="26" height="8"/></g>
+ <rect x="150" y="16" width="56" height="28" rx="8" fill="${ink}"/><text x="178" y="36" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="900" font-size="16" fill="#D9F23D">IA</text>`,
+vigilancia:`<path d="M10 110S50 46 110 46s100 64 100 64-40 64-100 64S10 110 10 110z" fill="#fff" stroke="${ink}" stroke-width="4"/>
+ <circle cx="110" cy="110" r="38" fill="#E7B8F3" stroke="${ink}" stroke-width="4"/><circle cx="110" cy="110" r="16" fill="${ink}"/><circle cx="118" cy="102" r="6" fill="#fff"/>
+ <g stroke="${ink}" stroke-width="4" stroke-linecap="round"><path d="M110 30V12M60 40 48 24M160 40l12-16M30 60 16 50M190 60l14-10"/></g>
+ <g transform="translate(150 150)"><rect x="0" y="0" width="44" height="62" rx="9" fill="#F5A9DD" stroke="${ink}" stroke-width="3.5"/><rect x="6" y="8" width="32" height="42" rx="4" fill="#fff" stroke="${ink}" stroke-width="2.5"/><path d="M22 18c-6 0-10 4-10 9 0 7 10 15 10 15s10-8 10-15c0-5-4-9-10-9z" fill="#F25A2E"/></g>`
+};
+const plans={
+ acoso:{chip:'Me acosan',c:'#A9DFF1',t:'Acoso en línea',d:'Mensajes, comentarios o llamadas insistentes que buscan intimidarte, aunque vengan de cuentas distintas.',n:'no es exagerar',
+  s:[['Guarda evidencia','Toma capturas donde se vean la fecha, la hora y el usuario. Hazlo antes de bloquear.',[G(2),'Guía 2']],
+     ['Reporta la cuenta','Usa la opción de reportar de la red social o app donde pasó.',[G(3),'Guía 3']],
+     ['No lo cargues sola','Cuéntaselo a alguien de confianza o busca acompañamiento.',[DIR,'Directorio']]]},
+ doxxeo:{chip:'Publicaron mis datos',c:'#F5A9DD',t:'Publicación de datos personales',d:'Alguien difundió tu dirección, teléfono, trabajo u otra información tuya sin tu permiso. Se conoce como doxxeo.',n:'tu seguridad primero',
+  s:[['Guarda evidencia','Capturas y enlaces de cada lugar donde se publicaron tus datos.',[G(2),'Guía 2']],
+     ['Pide que lo retiren','Reporta la publicación por compartir información privada.',[G(3),'Guía 3']],
+     ['Si temes por tu seguridad física, busca apoyo','Una organización puede ayudarte a evaluar el riesgo.',[DIR,'Directorio']]]},
+ suplantacion:{chip:'Se hacen pasar por mí',c:'#D9F23D',t:'Suplantación de identidad',d:'Alguien creó una cuenta con tu nombre o tus fotos para hacerse pasar por ti.',n:'tú eres la real',
+  s:[['Guarda evidencia','Captura el perfil falso, su enlace y lo que haya publicado.',[G(2),'Guía 2']],
+     ['Repórtalo como suplantación','Las redes tienen una opción específica para esto.',[G(3),'Guía 3']],
+     ['Avisa y, si te afecta, denuncia','Avisa a tus contactos desde tu cuenta real. Si te causa daño, puedes denunciar.',[G(4),'Guía 4']]]},
+ intimo:{chip:'Compartieron fotos íntimas',c:'#E7B8F3',t:'Difusión de contenido íntimo sin consentimiento',d:'Compartieron, o amenazan con compartir, fotos, videos o mensajes íntimos tuyos.',n:'no es tu culpa',
+  s:[['No borres nada','Las conversaciones y amenazas son evidencia. Guárdalas en un lugar seguro.',[G(2),'Guía 2']],
+     ['Busca acompañamiento antes de responder','No tienes que negociar sola con quien te amenaza.',[DIR,'Directorio']],
+     ['Conoce cómo denunciar','Puedes denunciarlo ante autoridades. La guía te explica cómo y dónde.',[G(4),'Guía 4']]]},
+ deepfake:{chip:'Editaron mi imagen con IA',c:'#FBC7A9',t:'Deepfakes',d:'Fotos, audios o videos alterados con inteligencia artificial para que parezca que dijiste o hiciste algo.',n:'eso no eres tú',
+  s:[['Guarda una copia y el enlace','Hazlo antes de que lo borren, así tienes cómo demostrarlo.',[G(2),'Guía 2']],
+     ['Reporta el contenido','Indica que es contenido manipulado o falso.',[G(3),'Guía 3']],
+     ['Busca acompañamiento','Legal o psicológico, según lo que necesites.',[DIR,'Directorio']]]},
+ vigilancia:{chip:'Creo que me vigilan',c:'#A9DFF1',t:'Vigilancia',d:'Alguien parece saber dónde estás, qué escribes o con quién hablas. Puede tener acceso a tu teléfono o a tus cuentas.',n:'confía en lo que sientes',
+  s:[['Pide ayuda desde otro dispositivo','Si tu teléfono está comprometido, quien te vigila podría ver lo que buscas.',null],
+     ['Entiende qué está pasando','Conoce las formas de vigilancia y cómo identificarlas.',[G(1),'Guía 1']],
+     ['Busca apoyo en seguridad digital','Hay organizaciones que pueden revisar tus dispositivos.',[DIR,'Directorio']]]}
+};
+const chips=document.getElementById('chips');
+Object.entries(plans).forEach(([k,p],i)=>{const b=document.createElement('button');b.className='chip';b.dataset.k=k;b.textContent=p.chip;b.setAttribute('aria-pressed',i===0);chips.appendChild(b)});
+const use=id=>`<svg class="ic"><use href="#${id}"/></svg>`;
+function progress(){
+  const t=[...document.querySelectorAll('.tick')],n=t.filter(x=>x.getAttribute('aria-pressed')==='true').length;
+  document.getElementById('pTxt').textContent=`${n} de 3 listos`;
+  document.getElementById('pBar').style.width=(n/3*100)+'%';
+  document.getElementById('finish').classList.toggle('show',n===3);
+}
+function show(k){
+  const p=plans[k],draw=document.getElementById('draw');
+  document.getElementById('scene').style.background=p.c;
+  draw.innerHTML=art[k];draw.classList.remove('swap');void draw.getBoundingClientRect();draw.classList.add('swap');
+  document.getElementById('sTitle').textContent=p.t;
+  document.getElementById('sDesc').textContent=p.d;
+  document.getElementById('sNote').textContent=p.n;
+  document.getElementById('steps').innerHTML=p.s.map((s,i)=>`<li><span class="stepnum">${i+1}</span><div class="txt"><strong>${s[0]}</strong><span>${s[1]}</span>${s[2]?`<a href="${s[2][0]}">${use(s[2][0]===DIR?'i-heart':'i-down')}${s[2][1]}</a>`:''}</div><button class="tick" aria-pressed="false" aria-label="Marcar paso ${i+1} como listo">${use('i-check')}</button></li>`).join('');
+  document.querySelectorAll('.tick').forEach(t=>t.addEventListener('click',()=>{const on=t.getAttribute('aria-pressed')!=='true';t.setAttribute('aria-pressed',on);t.closest('li').classList.toggle('done',on);progress()}));
+  progress();
+}
+chips.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;chips.querySelectorAll('.chip').forEach(o=>o.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');show(b.dataset.k)});
+show('acoso');
+
+/* ---------- COMUNIDAD: reacciones ---------- */
+document.querySelectorAll('.metoo').forEach(b=>b.addEventListener('click',()=>{
+  const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);
+  const n=+b.dataset.n+(on?1:0),s=b.querySelector('span');s.textContent=s.textContent.replace(/\d+$/,n);
+  b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');
+}));
+
+/* ---------- SUSCRIPCIÓN (demo) ---------- */
+const signup=document.getElementById('signup'),email=document.getElementById('email');
+document.getElementById('subBtn').addEventListener('click',()=>{
+  if(!email.value||!email.checkValidity()){email.focus();email.setCustomValidity('Escribe un correo válido, por ejemplo nombre@correo.com');email.reportValidity();email.setCustomValidity('');return}
+  document.getElementById('okText').textContent=`Te suscribiste. Te escribiremos a ${email.value}.`;signup.classList.add('done');
+});
+
+/* ---------- DONACIÓN (demo) ---------- */
+let freq='una',amt='100';
+const impactTxt={'50':'Q50 ayuda a imprimir guías para un taller comunitario.','100':'Q100 ayuda a mantener la plataforma en línea un mes.','250':'Q250 aporta a la creación de una guía nueva.','otro':'Cualquier monto suma. Tú decides cuánto.'};
+const lvl={'50':.35,'100':.6,'250':.9,'otro':.2};
+function paint(){
+  document.getElementById('impact').textContent=impactTxt[amt]+(freq==='mes'&&amt!=='otro'?' Cada mes, sostiene el trabajo a largo plazo.':'');
+  const h=46*lvl[amt],f=document.getElementById('jarFill');f.setAttribute('y',76-h);f.setAttribute('height',h);
+  document.getElementById('giveBtn').textContent=amt==='otro'?'Elegir monto':`Donar Q${amt}${freq==='mes'?' al mes':''}`;
+}
+document.querySelectorAll('.amt').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.amt').forEach(o=>o.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');amt=b.dataset.a;paint()}));
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.seg button').forEach(o=>o.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');freq=b.dataset.f;paint()}));
+paint();
+
+/* ---------- SALIDA RÁPIDA ---------- */
+const leave=()=>{try{window.top.location.replace('https://www.google.com/search?q=clima+hoy')}catch(e){location.replace('https://www.google.com')}};
+document.getElementById('exit').addEventListener('click',leave);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')leave()});
+
+/* ---------- DOCK ---------- */
+const links=[...document.querySelectorAll('.dock a')];
+const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting)links.forEach(l=>l.classList.toggle('on',l.dataset.s===en.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
+['plan','guias','unete','comunidad','directorio','apoya'].forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el)});
+</script>
+</body>
+</html>
